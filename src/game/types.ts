@@ -23,6 +23,7 @@ export interface Enemy extends Entity {
   maxHp: number;
   type: string;
   lastShotTime: number;
+  shotOffset: number; // 発射タイミングをずらすためのオフセット
 }
 
 export interface GameState {
@@ -40,4 +41,5 @@ export interface GameState {
   score: number;
   lives: number;
   frame: number;
+  isGameOver: boolean;
 }

@@ -10,7 +10,13 @@ function App() {
   const keysRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => keysRef.current.add(e.code);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // 矢印キーとスペースキーでのスクロールを防止
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+        e.preventDefault();
+      }
+      keysRef.current.add(e.code);
+    };
     const handleKeyUp = (e: KeyboardEvent) => keysRef.current.delete(e.code);
 
     window.addEventListener('keydown', handleKeyDown);
@@ -28,7 +34,7 @@ function App() {
     const loop = () => {
       // 状態更新
       currentState = updateGameState(currentState, keysRef.current);
-      setGameState({ ...currentState }); // UI表示用にステートを同期
+      setGameState({ ...currentState });
 
       // 描画
       drawGame(ctx, currentState);
@@ -58,7 +64,7 @@ function App() {
         <h1>Shooting Gemini</h1>
         <div className="stats">
           <p>Score: <span className="value">{gameState.score}</span></p>
-          <p>Lives: <span className="value">{'★'.repeat(gameState.lives)}</span></p>
+          <p>Lives: <span className="value">{gameState.lives >= 0 ? '★'.repeat(gameState.lives) : 'NONE'}</span></p>
         </div>
         <div className="controls">
           <h3>Controls</h3>
@@ -66,6 +72,7 @@ function App() {
             <li><span>Arrow Keys</span>: Move</li>
             <li><span>Z Key</span>: Shot</li>
             <li><span>Shift</span>: Slow Move</li>
+            <li><span>R Key</span>: Restart (Game Over)</li>
           </ul>
         </div>
       </div>
