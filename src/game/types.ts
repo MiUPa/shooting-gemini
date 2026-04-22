@@ -1,5 +1,5 @@
-export const CANVAS_WIDTH = 400;
-export const CANVAS_HEIGHT = 600;
+export const CANVAS_WIDTH = 600;
+export const CANVAS_HEIGHT = 800;
 
 export interface Point {
   x: number;
@@ -23,8 +23,10 @@ export interface Enemy extends Entity {
   maxHp: number;
   type: string;
   lastShotTime: number;
-  shotOffset: number; // 発射タイミングをずらすためのオフセット
+  shotOffset: number;
 }
+
+export type GameStatus = 'TITLE' | 'PLAYING' | 'PAUSED' | 'GAMEOVER';
 
 export interface GameState {
   player: {
@@ -41,5 +43,5 @@ export interface GameState {
   score: number;
   lives: number;
   frame: number;
-  isGameOver: boolean;
+  status: GameStatus;
 }
