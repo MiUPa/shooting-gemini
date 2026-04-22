@@ -6,7 +6,7 @@ export const createInitialState = (): GameState => ({
     x: CANVAS_WIDTH / 2,
     y: CANVAS_HEIGHT * 0.8,
     radius: 15,
-    hitRadius: 2,
+    hitRadius: 1.5,
     speed: 4.5,
     slowSpeed: 2.0,
     invincible: 60,
@@ -67,14 +67,14 @@ export const updateGameState = (
     .filter(b => b.y > -20 && b.y < CANVAS_HEIGHT + 20 && b.x > -20 && b.x < CANVAS_WIDTH + 20);
 
   // 敵の生成
-  if (nextState.frame % 60 === 0) {
+  if (nextState.frame % 80 === 0) {
     nextState.enemies.push({
       x: Math.random() * (CANVAS_WIDTH - 60) + 30,
       y: -20,
       radius: 15,
       active: true,
-      hp: 12,
-      maxHp: 12,
+      hp: 6,
+      maxHp: 6,
       type: 'basic',
       lastShotTime: 0,
     });
@@ -82,20 +82,20 @@ export const updateGameState = (
 
   // 敵の更新と弾幕
   nextState.enemies.forEach(enemy => {
-    enemy.y += 1.0;
+    enemy.y += 0.8;
     
     // 弾幕
-    if (nextState.frame % 45 === 0) {
+    if (nextState.frame % 60 === 0) {
       const angleToPlayer = Math.atan2(player.y - enemy.y, player.x - enemy.x);
       
-      // 自機狙い 3-way
+      // 自機狙い 3-way (弾速を落とした)
       for (let i = -1; i <= 1; i++) {
-        const angle = angleToPlayer + (i * Math.PI) / 12;
+        const angle = angleToPlayer + (i * Math.PI) / 16;
         nextState.bullets.push({
           x: enemy.x,
           y: enemy.y,
-          vx: Math.cos(angle) * 3.5,
-          vy: Math.sin(angle) * 3.5,
+          vx: Math.cos(angle) * 2.2,
+          vy: Math.sin(angle) * 2.2,
           radius: 4,
           active: true,
           color: '#f44',
@@ -103,15 +103,15 @@ export const updateGameState = (
         });
       }
       
-      // 円形弾 (12方向)
-      if (nextState.frame % 135 === 0) {
-        for (let i = 0; i < 12; i++) {
-          const angle = (i * Math.PI * 2) / 12;
+      // 円形弾 (方向数を減らし、速度も落とした)
+      if (nextState.frame % 180 === 0) {
+        for (let i = 0; i < 8; i++) {
+          const angle = (i * Math.PI * 2) / 8;
           nextState.bullets.push({
             x: enemy.x,
             y: enemy.y,
-            vx: Math.cos(angle) * 2,
-            vy: Math.sin(angle) * 2,
+            vx: Math.cos(angle) * 1.5,
+            vy: Math.sin(angle) * 1.5,
             radius: 5,
             active: true,
             color: '#f84',
